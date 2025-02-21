@@ -1,0 +1,55 @@
+#крестики-нолики
+def draw_board(board):
+    print("  0 1 2")
+    for i, row in enumerate(board):
+        print(f"{i} {' '.join(row)}")
+
+def check_win(board, player):
+    for row in board:
+        if all(cell == player for cell in row):
+            return True
+    for col in range(3):
+        if all(board[row][col] ==player for row in range(3)):
+            return True
+
+    if all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3)):
+        return True
+
+    return False
+
+def is_full(board):
+    return all(cell != " " for row in board for cell in row)
+
+def start_game():
+    board = [[" " for _ in range(3)] for _ in range(3)]
+    players = ["X", "0"]
+    turn = 0
+
+    while True:
+        draw_board(board)
+        player = players[turn % 2]
+
+        while True:
+            try:
+                row, col = map(int, input(f"{player}, введите номер строки и столбца (0-2): ").split())
+                if board[row][col] == " ":
+                    board[row][col] = player
+                    break
+                else:
+                    print("Ячейка занята, попробуйте снова.")
+            except (ValueError, IndexError):
+                    print("Некорректный ввод, попробуйте снова.")
+
+        if check_win(board, player):
+            draw_board(board)
+            print(f"Игрок {player} победил!")
+            break
+
+        if is_full(board):
+            draw_board(board)
+            print("Ничья")
+            break
+
+        turn += 1
+print("Крестики-нолики")
+start_game()
